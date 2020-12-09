@@ -1,0 +1,25 @@
+package org.ulis.service;
+
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+import org.ulis.domain.NoticeBoard;
+
+public interface NoticeService {
+	public List<NoticeBoard> find(NoticeBoard noticeBoard);
+	
+	public int count(NoticeBoard noticeBoard);
+	
+	public void setGrade(List<String> gradeList,NoticeBoard noticeBoard);
+	
+	public int addNotice(List<String> gradeList,NoticeBoard noticeBoard);
+	
+	public void addFile(MultipartFile multipartFile, String division,int noticeSEQ) throws Exception;
+
+	public NoticeBoard view(int noticeBoardNo);
+	
+	public void remove(int noticeBoardNo);
+	
+	public void alarm(int grade);
+	
+}

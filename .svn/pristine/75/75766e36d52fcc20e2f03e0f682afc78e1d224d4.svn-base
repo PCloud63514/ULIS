@@ -1,0 +1,15 @@
+package org.ulis.persistence;
+
+import java.util.List;
+
+import org.ulis.domain.IntegrationMessage;
+import org.ulis.domain.Send;
+
+/**
+ * @author https://www.facebook.com/groups/mybatis/
+ */
+public interface IntegrationMessageMapper {
+    public void insert(IntegrationMessage integrationMessage);
+    public IntegrationMessage selectOne(IntegrationMessage integrationMessage);
+    public List<IntegrationMessage> selectList(IntegrationMessage integrationMessage);
+}

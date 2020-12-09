@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- @author https://www.facebook.com/groups/mybatis/ -->
+<mapper namespace="org.mybatis.mapper.SubjectMapper">
+    <resultMap id="subjectResultMap" type="org.ulis.domain.Subject">
+        <id column="SUBJECT_NO" property="subjectNo" />
+    </resultMap>
+
+    <sql id="whereSql">
+        <where>
+            <if test="subjectNo > 0">
+                AND SUBJECT_NO = #{subjectNo}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="org.ulis.domain.Subject" resultType="int">
+        SELECT COUNT(*) 
+        FROM SUBJECT
+        <include refid="whereSql" />
+    </select>
+
+    <select id="list" parameterType="org.ulis.domain.Subject" resultMap="subjectResultMap">
+        SELECT * 
+        FROM (
+            SELECT ROW_NUMBER() OVER(ORDER BY SUBJECT_NO) RN
+                  ,SUBJECT_NO
+            FROM SUBJECT
+            <include refid="whereSql" />
+        ) TB
+        <where>
+            <if test="itemStart > -1">
+                RN BETWEEN (#{itemStart} + 1) 
+                       AND (#{itemStart} + #{itemSizePerPage})
+            </if>
+        </where>
+    </select>
+
+    <select id="select" parameterType="org.ulis.domain.Subject" resultMap="subjectResultMap">
+        SELECT 
+            SUBJECT_NO
+        FROM SUBJECT
+        <include refid="whereSql" />
+    </select>
+
+    <insert id="insert" parameterType="org.ulis.domain.Subject">
+        <selectKey keyColumn="SUBJECT_NO" keyProperty="subjectNo" resultType="int" order="BEFORE" >
+            SELECT SUBJECT_NO_SEQ.NEXTVAL
+            FROM DUAL
+        </selectKey>
+        INSERT INTO SUBJECT (
+            SUBJECT_NO
+        )
+        VALUES (
+            #{subjectNo}
+        )
+    </insert>
+
+    <update id="update" parameterType="org.ulis.domain.Subject">
+        UPDATE SUBJECT
+        <set>
+            <if test="subjectNo > 0">
+                SUBJECT_NO = #{subjectNo},
+            </if>
+        </set>
+        <where>
+            <if test="subjectNo > 0">
+                AND SUBJECT_NO = #{subjectNo}
+            </if>
+        </where> 
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM SUBJECT 
+        <where>
+            <if test="subjectNo > 0">
+                AND SUBJECT_NO = #{subjectNo}
+            </if>
+        </where> 
+    </delete>
+</mapper>

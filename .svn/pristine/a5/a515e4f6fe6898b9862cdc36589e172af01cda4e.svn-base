@@ -1,0 +1,61 @@
+<%@ page import="java.text.SimpleDateFormat"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<html>
+<head>
+<title>INTEGRATION MESSAGE SEND PAGE</title>
+
+<script type="text/javascript">
+var openWin;
+
+function selectCancel(){
+	document.getElementById("students").value="";
+}
+
+function stuPopupOpen(gradeNo) {
+    window.name = "studentForm";
+
+    var option = "width=550, height=400, resizable=no, scrollbars=no, status=no, toolbar=yes, directories=yes, menubar=yes, location=no;";
+    openWin = window.open("/integration/popup/"+gradeNo, "stuForm", option);
+}
+
+</script>
+</head>
+<body>
+	<h1 align=center>통합메시지 발신</h1>
+	<form action="/integration/send" method="post">
+		<table border="1" align=center>
+			<tr>
+				<th>제목</th>
+				<td><input type="text" name="title" size="70"><br /></td>
+			</tr>
+			<tr>
+			<th>학생</th>
+			<td>
+				<input type="button" name="grade" size="70" value="1학년" onclick="stuPopupOpen('1')">
+				<input type="button" name="grade" size="70" value="2학년" onclick="stuPopupOpen('2')">
+				<input type="button" name="grade" size="70" value="3학년" onclick="stuPopupOpen('3')">
+				<input type="button" name="grade" size="70" value="4학년" onclick="stuPopupOpen('4')"><br>
+				<input type="text" id="students"  name="students" size="60" readonly/>
+				<input type="button" name="selectGrade" size="70" value="초기화" onclick="selectCancel()">
+			</td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td><textarea rows="18" cols="72" name="content"></textarea><br />
+				</td>
+			</tr>
+			<tr align="center">
+				<td colspan="2">
+				<a href="<c:url value="/integration/find" />">
+            		<input type="button" id="button_list" name="button_list" value="목록" />
+       			 </a>
+				<input type="submit" value="등록" /></td>
+			</tr>
+			
+		</table>		
+</form>
+</body>
+</html>

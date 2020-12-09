@@ -1,0 +1,11 @@
+package org.ulis.service;
+
+import java.util.List;
+
+import org.ulis.domain.IntegrationMessage;
+
+public interface integrationService {
+	public void send();
+	public IntegrationMessage view(IntegrationMessage integrationMessage);
+	public List<IntegrationMessage> find();
+}

@@ -1,0 +1,146 @@
+package org.ulis.domain;
+
+import java.io.Serializable;
+import java.sql.Date;
+
+public class NoticeBoard implements Serializable {
+	private int noticeBoardNo;
+	private int subjectNo;
+	private String gradeOne;
+	private String gradeTwo;
+	private String gradeThree;
+	private String gradeFour;
+	private String title;
+	private String content;
+	private String writeDate;
+	private String endDate;
+	private String administratorNo;
+
+	public NoticeBoard() {
+	}
+
+	public NoticeBoard(int noticeBoardNo, int subjectNo, String gradeOne, String gradeTwo, String gradeThree,
+			String gradeFour, String title, String content, String writeDate, String endDate, String administratorNo) {
+		super();
+		this.noticeBoardNo = noticeBoardNo;
+		this.subjectNo = subjectNo;
+		this.gradeOne = gradeOne;
+		this.gradeTwo = gradeTwo;
+		this.gradeThree = gradeThree;
+		this.gradeFour = gradeFour;
+		this.title = title;
+		this.content = content;
+		this.writeDate = writeDate;
+		this.endDate = endDate;
+		this.administratorNo = administratorNo;
+	}
+
+	public int getNoticeBoardNo() {
+		return noticeBoardNo;
+	}
+
+	public void setNoticeBoardNo(int noticeBoardNo) {
+		this.noticeBoardNo = noticeBoardNo;
+	}
+
+	public int getSubjectNo() {
+		return subjectNo;
+	}
+
+	public void setSubjectNo(int subjectNo) {
+		this.subjectNo = subjectNo;
+	}
+
+	public String getGradeOne() {
+		return gradeOne;
+	}
+
+	public void setGradeOne(String gradeOne) {
+		this.gradeOne = gradeOne;
+	}
+
+	public String getGradeTwo() {
+		return gradeTwo;
+	}
+
+	public void setGradeTwo(String gradeTwo) {
+		this.gradeTwo = gradeTwo;
+	}
+
+	public String getGradeThree() {
+		return gradeThree;
+	}
+
+	public void setGradeThree(String gradeThree) {
+		this.gradeThree = gradeThree;
+	}
+
+	public String getGradeFour() {
+		return gradeFour;
+	}
+
+	public void setGradeFour(String gradeFour) {
+		this.gradeFour = gradeFour;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getWriteDate() {
+		return writeDate;
+	}
+
+	public void setWriteDate(String writeDate) {
+		this.writeDate = writeDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getAdministratorNo() {
+		return administratorNo;
+	}
+
+	public void setAdministratorNo(String administratorNo) {
+		this.administratorNo = administratorNo;
+	}
+
+	public String getNoticeGradePlus() {
+		StringBuilder builder = new StringBuilder("");
+		if ("Y".equals(this.gradeOne)) {
+			builder.append("1");
+		}
+
+		if ("Y".equals(this.gradeTwo)) {
+			builder.append(",2");
+		}
+
+		if ("Y".equals(this.gradeThree)) {
+			builder.append(",3");
+		}
+
+		if ("Y".equals(this.gradeFour)) {
+			builder.append(",4");
+		}
+
+		return builder.toString();
+	}
+}

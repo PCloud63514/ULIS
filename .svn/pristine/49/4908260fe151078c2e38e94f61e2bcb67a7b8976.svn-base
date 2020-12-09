@@ -1,0 +1,50 @@
+package org.ulis.service;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.ulis.domain.Send;
+import org.ulis.persistence.SendMapper;
+
+@Service
+public class IntegrationMessageServiceImpl implements IntegrationMessageService{
+	@Resource
+	SendMapper sendMapper;
+	
+	@Override
+	public void send() {
+		
+	}
+
+	@Override
+	public Map<String,Object> view(int sendNo) {
+		//발신 번호 넘어와야함
+//		Send send = new Send();
+//		send.setSendNo(sendNo);
+		return sendMapper.selectOne(sendNo);
+	}	
+	
+	@Override
+	public List<Map<String,Object>> find(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		
+		List<Map<String,Object>> sendList = null;
+		String roleType = session.getAttribute("roleType") != null ? (String)session.getAttribute("roleType") : "";
+		String id = session.getAttribute("id") != null ? (String)session.getAttribute("id") : "";
+		
+		if(StringUtils.equalsIgnoreCase(roleType, "A")) {
+			sendList = sendMapper.selectList(id);
+			System.out.println(sendList.toString());
+		} else {
+			
+		}
+		return sendList;
+	}
+	
+}

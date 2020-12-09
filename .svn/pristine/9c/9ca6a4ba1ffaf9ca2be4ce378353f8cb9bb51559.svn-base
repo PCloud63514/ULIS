@@ -1,0 +1,11 @@
+package org.ulis.service;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+public interface LoginService {
+	public Map<String,String> login(String userNo, String password,String userToken);
+	public Boolean logout(HttpServletRequest request);
+
+}

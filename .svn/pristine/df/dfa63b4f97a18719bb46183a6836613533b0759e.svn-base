@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- @author https://www.facebook.com/groups/mybatis/ -->
+<mapper namespace="org.ulis.persistence.NoticeBoardMapper">
+    <resultMap id="noticeBoardResultMap" type="org.ulis.domain.NoticeBoard">
+        <id column="NOTICE_BOARD_NO" property="noticeBoardNo" />
+        <result column="SUBJECT_NO" property="subjectNo" />
+        <result column="GRADE" property="grade" />
+        <result column="TITLE" property="title" />
+        <result column="CONTENT" property="content" />
+        <result column="END_DATE" property="endDate"/>
+        <result column="ADMINISTRATOR_NO" property="administratorNo" />
+    </resultMap>
+
+    <sql id="whereSql">
+        <where>
+            <if test="noticeBoardNo > 0">
+                AND NOTICE_BOARD_NO = #{noticeBoardNo}
+            </if>
+            <if test="subjectNo > 0">
+                AND SUBJECT_NO = #{subjectNo}
+            </if>
+            <if test="grade > 0">
+                AND GRADE = #{grade}
+            </if>
+            <if test="title != null and title != ''">
+                AND TITLE = #{title}
+            </if>
+            <if test="content != null and content != ''">
+                AND CONTENT = #{content}
+            </if>
+            <if test="writeDate != null and writeDate != ''">
+                AND WRITE_DATE = #{writeDate}
+            </if>
+            <if test="administratorNo != null and administratorNo != ''">
+                AND ADMINISTRATOR_NO = #{administratorNo}
+            </if>
+        </where>
+    </sql>
+
+    <!-- ��ü �Ǽ� ��ȸ ���� ���� -->
+    <select id="count" parameterType="org.ulis.domain.NoticeBoard" resultType="int">
+        SELECT COUNT(*) 
+        FROM NOTICE_BOARD
+        <include refid="whereSql" />
+    </select>
+
+    <!-- ��� ��ȸ ���� ���� -->
+    <select id="list" parameterType="org.ulis.domain.NoticeBoard" resultMap="noticeBoardResultMap">
+        SELECT * 
+        FROM (
+            SELECT ROW_NUMBER() OVER(ORDER BY NOTICE_BOARD_NO) RN
+                  ,NOTICE_BOARD_NO
+                  ,GRADE
+                  ,TITLE
+                  ,CONTENT
+                  ,WRITE_DATE
+                  ,ADMINISTRATOR_NO
+            FROM NOTICE_BOARD
+            <include refid="whereSql" />
+        )  TB
+         
+        <where>
+            <if test="itemStart > -1">
+                RN BETWEEN (#{itemStart} + 1) 
+                       AND (#{itemStart} + #{itemSizePerPage})
+            </if>
+        </where>
+    </select>
+
+    <!-- ��ȸ ���� ���� -->
+    <select id="select" parameterType="org.ulis.domain.NoticeBoard" resultMap="noticeBoardResultMap">
+        SELECT 
+            NOTICE_BOARD_NO,
+            SUBJECT_NO,
+            GRADE,
+            TITLE,
+            CONTENT,
+            WRITE_DATE,
+            ADMINISTRATOR_NO
+        FROM NOTICE_BOARD
+        <include refid="whereSql" />
+    </select>
+
+    <!-- ��� ���� ���� -->
+    <insert id="insert" parameterType="org.ulis.domain.NoticeBoard">
+        <!-- �ڵ� ���� Ű ��ȸ -->
+        <selectKey keyColumn="NOTICE_BOARD_NO" keyProperty="noticeBoardNo" resultType="int" order="BEFORE" >
+            SELECT NOTICE_BOARD_NO_SEQ.NEXTVAL
+            FROM DUAL
+        </selectKey>
+        INSERT INTO NOTICE_BOARD (
+            NOTICE_BOARD_NO,
+            SUBJECT_NO,
+            GRADE,
+            TITLE,
+            CONTENT,
+            WRITE_DATE,
+            END_DATE,
+            ADMINISTRATOR_NO
+        )
+        VALUES (
+            #{noticeBoardNo},
+            #{subjectNo},
+            #{grade},
+            #{title},
+            #{content},
+            SYSDATE,
+            #{endDate},
+            #{administratorNo}
+        )
+    </insert>
+
+    <!-- ���� ���� ���� -->
+    <update id="update" parameterType="org.ulis.domain.NoticeBoard">
+        UPDATE NOTICE_BOARD
+        <set>
+            <if test="noticeBoardNo > 0">
+                NOTICE_BOARD_NO = #{noticeBoardNo},
+            </if>
+            <if test="subjectNo > 0">
+                SUBJECT_NO = #{subjectNo},
+            </if>
+            <if test="grade > 0">
+                GRADE = #{grade},
+            </if>
+            <if test="title != null">
+                TITLE = #{title},
+            </if>
+            <if test="content != null">
+                CONTENT = #{content},
+            </if>
+            <if test="writeDate != null">
+                WRITE_DATE = #{writeDate},
+            </if>
+            <if test="administratorNo != null">
+                ADMINISTRATOR_NO = #{administratorNo},
+            </if>
+        </set>
+        <where>
+            <if test="noticeBoardNo > 0">
+                AND NOTICE_BOARD_NO = #{noticeBoardNo}
+            </if>
+        </where> 
+    </update>
+
+    <!-- ���� ���� ���� -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM NOTICE_BOARD 
+        <where>
+            <if test="noticeBoardNo > 0">
+                AND NOTICE_BOARD_NO = #{noticeBoardNo}
+            </if>
+        </where> 
+    </delete>
+</mapper>

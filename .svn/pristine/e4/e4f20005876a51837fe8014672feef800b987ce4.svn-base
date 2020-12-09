@@ -1,0 +1,13 @@
+package org.ulis.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.ulis.domain.Student;
+
+public interface StudentService {
+	public Map<String,Object> view(String studentNo);
+	public void update(Map<String, Object> studentUpdate);
+	public List<Map<String, Object>> find(int subjectNo);
+	public void edit(Student student);
+}

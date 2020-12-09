@@ -1,0 +1,8 @@
+package org.ulis.service;
+
+import javax.servlet.http.HttpServletRequest;
+
+public interface LoginService {
+	public Boolean login(String userAgent, HttpServletRequest request) ;
+	public void logout();
+}

@@ -1,0 +1,16 @@
+package org.ulis.persistence;
+
+import java.util.List;
+
+import org.ulis.domain.Subject;
+
+/**
+ * @author https://www.facebook.com/groups/mybatis/
+ */
+public interface SubjectMapper {
+    public List<Subject> list(Subject subject);
+    public Subject select(Subject subject);
+    public void insert(Subject subject);
+    public void update(Subject subject);
+    public void delete(Subject subject);
+}

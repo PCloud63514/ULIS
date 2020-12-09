@@ -1,0 +1,16 @@
+package org.ulis.persistence;
+
+import java.util.List;
+
+import org.ulis.domain.Administrator;
+
+/**
+ * @author https://www.facebook.com/groups/mybatis/
+ */
+public interface AdministratorMapper {
+    public List<Administrator> list(Administrator administrator) ;
+    public Administrator select(Administrator administrator) ;
+    public void insert(Administrator administrator) ;
+    public void update(Administrator administrator) ;
+    public void delete(Administrator administrator) ;
+}

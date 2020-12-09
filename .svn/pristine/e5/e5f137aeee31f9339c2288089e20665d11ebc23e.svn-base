@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- @author https://www.facebook.com/groups/mybatis/ -->
+<mapper namespace="org.ulis.mapper.NoticeBoardFileMapper">
+    <resultMap id="noticeBoardFileResultMap" type="org.ulis.domain.NoticeBoardFile">
+        <id column="NOTICE_BOARD_FILE_NO" property="noticeBoardFileNo" />
+        <result column="DIVISION" property="division" />
+        <result column="LOGICFILE_NAME" property="logicfileName" />
+        <result column="PHYSICSFILE_NAME" property="physicsfileName" />
+        <result column="FILE_PATH" property="filePath" />
+        <result column="NOTICE_BOARD_NO" property="noticeBoardNo" />
+    </resultMap>
+
+    <sql id="whereSql">
+        <where>
+            <if test="noticeBoardFileNo > 0">
+                AND NOTICE_BOARD_FILE_NO = #{noticeBoardFileNo}
+            </if>
+            <if test="division != null and division != ''">
+                AND DIVISION = #{division}
+            </if>
+            <if test="logicfileName != null and logicfileName != ''">
+                AND LOGICFILE_NAME = #{logicfileName}
+            </if>
+            <if test="physicsfileName != null and physicsfileName != ''">
+                AND PHYSICSFILE_NAME = #{physicsfileName}
+            </if>
+            <if test="filePath != null and filePath != ''">
+                AND FILE_PATH = #{filePath}
+            </if>
+            <if test="noticeBoardNo > 0">
+                AND NOTICE_BOARD_NO = #{noticeBoardNo}
+            </if>
+        </where>
+    </sql>
+
+    <!-- ��ü �Ǽ� ��ȸ ���� ���� -->
+    <select id="count" parameterType="org.ulis.domain.NoticeBoardFile" resultType="int">
+        SELECT COUNT(*) 
+        FROM NOTICE_BOARD_FILE
+        <include refid="whereSql" />
+    </select>
+
+    <!-- ��� ��ȸ ���� ���� -->
+    <select id="list" parameterType="org.ulis.domain.NoticeBoardFile" resultMap="noticeBoardFileResultMap">
+        SELECT * 
+        FROM (
+            SELECT ROW_NUMBER() OVER(ORDER BY NOTICE_BOARD_FILE_NO) RN
+                  ,NOTICE_BOARD_FILE_NO
+                  ,DIVISION
+                  ,LOGICFILE_NAME
+                  ,PHYSICSFILE_NAME
+                  ,FILE_PATH
+                  ,NOTICE_BOARD_NO
+            FROM NOTICE_BOARD_FILE
+            <include refid="whereSql" />
+        ) TB
+        <where>
+            <if test="itemStart > -1">
+                RN BETWEEN (#{itemStart} + 1) 
+                       AND (#{itemStart} + #{itemSizePerPage})
+            </if>
+        </where>
+    </select>
+
+    <!-- ��ȸ ���� ���� -->
+    <select id="select" parameterType="org.ulis.domain.NoticeBoardFile" resultMap="noticeBoardFileResultMap">
+        SELECT 
+            NOTICE_BOARD_FILE_NO,
+            DIVISION,
+            LOGICFILE_NAME,
+            PHYSICSFILE_NAME,
+            FILE_PATH,
+            NOTICE_BOARD_NO
+        FROM NOTICE_BOARD_FILE
+        <include refid="whereSql" />
+    </select>
+
+    <!-- ��� ���� ���� -->
+    <insert id="insert" parameterType="org.ulis.domain.NoticeBoardFile">
+        <!-- �ڵ� ���� Ű ��ȸ -->
+        <selectKey keyColumn="NOTICE_BOARD_FILE_NO" keyProperty="noticeBoardFileNo" resultType="int" order="BEFORE" >
+            SELECT NOTICE_BOARD_FILE_NO_SEQ.NEXTVAL
+            FROM DUAL
+        </selectKey>
+        INSERT INTO NOTICE_BOARD_FILE (
+            NOTICE_BOARD_FILE_NO,
+            DIVISION,
+            LOGICFILE_NAME,
+            PHYSICSFILE_NAME,
+            FILE_PATH,
+            NOTICE_BOARD_NO
+        )
+        VALUES (
+            #{noticeBoardFileNo},
+            #{division},
+            #{logicfileName},
+            #{physicsfileName},
+            #{filePath},
+            #{noticeBoardNo}
+        )
+    </insert>
+
+    <!-- ���� ���� ���� -->
+    <update id="update" parameterType="org.ulis.domain.NoticeBoardFile">
+        UPDATE NOTICE_BOARD_FILE
+        <set>
+            <if test="noticeBoardFileNo > 0">
+                NOTICE_BOARD_FILE_NO = #{noticeBoardFileNo},
+            </if>
+            <if test="division != null">
+                DIVISION = #{division},
+            </if>
+            <if test="logicfileName != null">
+                LOGICFILE_NAME = #{logicfileName},
+            </if>
+            <if test="physicsfileName != null">
+                PHYSICSFILE_NAME = #{physicsfileName},
+            </if>
+            <if test="filePath != null">
+                FILE_PATH = #{filePath},
+            </if>
+            <if test="noticeBoardNo > 0">
+                NOTICE_BOARD_NO = #{noticeBoardNo},
+            </if>
+        </set>
+        <where>
+            <if test="noticeBoardFileNo > 0">
+                AND NOTICE_BOARD_FILE_NO = #{noticeBoardFileNo}
+            </if>
+        </where> 
+    </update>
+
+    <!-- ���� ���� ���� -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM NOTICE_BOARD_FILE 
+        <where>
+            <if test="noticeBoardFileNo > 0">
+                AND NOTICE_BOARD_FILE_NO = #{noticeBoardFileNo}
+            </if>
+        </where> 
+    </delete>
+</mapper>

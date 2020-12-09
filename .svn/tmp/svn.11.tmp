@@ -1,0 +1,124 @@
+package org.ulis.service;
+
+import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.ulis.domain.NoticeBoard;
+import org.ulis.domain.NoticeBoardFile;
+import org.ulis.persistence.NoticeBoardFileMapper;
+import org.ulis.persistence.NoticeBoardMapper;
+
+@Service
+public class NoticeServiceImpl implements NoticeService {
+	
+	@Value("#{database['upload.path']}")
+	private String path;
+	
+	@Resource
+	private NoticeBoardMapper noticeBoardMapper;
+
+	@Resource
+	private NoticeBoardFileMapper noticeBoardFileMapper; 
+	
+	@Override
+	public List<NoticeBoard> find(NoticeBoard noticeBoard) {
+		noticeBoard.setItemStart(0);
+		noticeBoard.setItemSizePerPage(10);
+		return this.noticeBoardMapper.list(noticeBoard);
+	}
+
+	//페이징처리
+	@Override
+	public int count(NoticeBoard noticeBoard) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setGrade(NoticeBoard noticeBoard){
+//		List<String> gradeList = noticeBoard.getGradeList();
+//		
+//		for(int list = 0; list<gradeList.size(); list++) {
+//			if("1".equals(gradeList.get(list))) {
+//				noticeBoard.setGradeOne('1');
+//			}else if("2".equals(gradeList.get(list))) {
+//				noticeBoard.setGradeTwo('1'); 
+//			}else if("3".equals(gradeList.get(list))) {
+//				noticeBoard.setGradeThree('1'); 
+//			}else if("4".equals(gradeList.get(list))) {
+//				noticeBoard.setGradeFour('1'); 
+//			}
+//		}
+//		
+//		if(!('1'==noticeBoard.getGradeOne())) {
+//			noticeBoard.setGradeOne('0');	
+//		}
+//		if(!('1'==noticeBoard.getGradeTwo())) {
+//			noticeBoard.setGradeTwo('0');	
+//		}
+//		if(!('1'==noticeBoard.getGradeThree())) {
+//			noticeBoard.setGradeThree('0');	
+//		}
+//		if(!('1'==noticeBoard.getGradeFour())) {
+//			noticeBoard.setGradeFour('0');	
+//		}
+		
+	}
+	
+	@Override
+	public int addNotice(NoticeBoard noticeBoard) {
+		//고정값으로 학과랑 담당자 임시 지정해둠 
+		noticeBoard.setAdministratorNo("comgong01");
+		noticeBoard.setSubjectNo(1);
+
+		setGrade(noticeBoard);
+		
+		this.noticeBoardMapper.insert(noticeBoard);			
+		System.out.println("잘가");
+		
+	    return noticeBoard.getNoticeBoardNo();
+	}
+
+	@Override
+	public void addFile(MultipartFile multipartFile, String division,int noticeSEQ) throws Exception{
+		NoticeBoardFile noticeBoardFile = new NoticeBoardFile();
+		
+		String filePath = (path+"\\"+LocalDate.now());
+		//폴더 동적생성
+		File f = new File(filePath);
+		if(!f.exists()) {
+			f.mkdirs();			
+		}
+		
+		String physical1 = String.valueOf(System.currentTimeMillis());
+		String physical2 = String.valueOf(System.nanoTime());
+		String physicalKey = physical1 + physical2;
+
+		noticeBoardFile.setLogicfileName(multipartFile.getOriginalFilename());
+		noticeBoardFile.setPhysicsfileName(physicalKey);
+		noticeBoardFile.setDivision(division);
+		noticeBoardFile.setNoticeBoardNo(noticeSEQ);
+		this.noticeBoardFileMapper.insert(noticeBoardFile);
+		
+		Path fileSavePath = FileSystems.getDefault().getPath(filePath+File.separator+physicalKey);
+		File target = new File(fileSavePath.toUri());
+		FileCopyUtils.copy(multipartFile.getBytes(),target);
+		
+		System.out.println("hi");
+	}
+
+	@Override
+	public void alarm(int grade) {
+		//알람
+	}
+
+}

@@ -1,0 +1,19 @@
+package org.ulis.persistence;
+
+import java.util.List;
+import java.util.Map;
+
+import org.ulis.domain.Student;
+
+/**
+ * @author https://www.facebook.com/groups/mybatis/
+ */
+public interface StudentMapper {
+    public List<Student> list(Student student);
+    public Student select(Student student);
+    public void updateStudent(Map<String, Object> studentUpdate);
+    public void updateFcm(Student student);
+    public Map<String,Object> selectOne(Student student);
+    public List<Map<String, Object>> selectList(Student student);
+    public void updateEdit(Student student);
+}

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- @author https://www.facebook.com/groups/mybatis/ -->
+<mapper namespace="org.ulis.persistence.AdministratorMapper">
+	<resultMap id="administratorResultMap" type="org.ulis.domain.Administrator">
+		<id column="ADMINISTRATOR_NO" property="administratorNo" />
+		<result column="SUBJECT_NO" property="subjectNo" />
+		<result column="ADMINISTRATOR_NAME" property="administratorName" />
+		<result column="PASSWORD" property="password" />
+	</resultMap>
+
+	<sql id="whereSql">
+		<where>
+			<if test="administratorNo != null and administratorNo != ''">
+				AND ADMINISTRATOR_NO = #{administratorNo}
+			</if>
+			<if test="subjectNo > 0">
+				AND SUBJECT_NO = #{subjectNo}
+			</if>
+			<if test="administratorName != null and administratorName != ''">
+				AND ADMINISTRATOR_NAME = #{administratorName}
+			</if>
+			<if test="password != null and password != ''">
+				AND PASSWORD = #{password}
+			</if>
+		</where>
+	</sql>
+
+	<select id="count" parameterType="org.ulis.domain.Administrator"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM ADMINISTRATOR
+		<include refid="whereSql" />
+	</select>
+
+	<select id="list" parameterType="org.ulis.domain.Administrator"
+		resultMap="administratorResultMap">
+		SELECT *
+		FROM (
+		SELECT ROW_NUMBER() OVER(ORDER BY ADMINISTRATOR_NO) RN
+		,ADMINISTRATOR_NO
+		,SUBJECT_NO
+		,ADMINISTRATOR_NAME
+		,PASSWORD
+		FROM ADMINISTRATOR
+		<include refid="whereSql" />
+		) TB
+		<where>
+			<if test="itemStart > -1">
+				RN BETWEEN (#{itemStart} + 1)
+				AND (#{itemStart} + #{itemSizePerPage})
+			</if>
+		</where>
+	</select>
+
+	<select id="select" parameterType="org.ulis.domain.Administrator"
+		resultMap="administratorResultMap">
+		SELECT
+			ADMINISTRATOR_NO,
+			SUBJECT_NO,
+			ADMINISTRATOR_NAME,
+			PASSWORD
+		FROM
+		ADMINISTRATOR
+		<where>
+			<if test="administratorNo != null and administratorNo != ''">
+				AND ADMINISTRATOR_NO = #{administratorNo}
+			</if>
+			<if test="password != null and password != ''">
+				AND PASSWORD = #{password}
+			</if>
+			
+		</where>
+	</select>
+
+	<!-- ��� ���� ���� -->
+	<insert id="insert" parameterType="org.ulis.domain.Administrator">
+		<!-- �ڵ� ���� Ű ��ȸ -->
+		<selectKey keyColumn="ADMINISTRATOR_NO" keyProperty="administratorNo"
+			resultType="java.lang.String" order="BEFORE">
+			SELECT ADMINISTRATOR_NO_SEQ.NEXTVAL
+			FROM DUAL
+		</selectKey>
+		INSERT INTO ADMINISTRATOR (
+		ADMINISTRATOR_NO,
+		SUBJECT_NO,
+		ADMINISTRATOR_NAME,
+		PASSWORD
+		)
+		VALUES (
+		#{administratorNo},
+		#{subjectNo},
+		#{administratorName},
+		#{password}
+		)
+	</insert>
+
+	<!-- ���� ���� ���� -->
+	<update id="update" parameterType="org.ulis.domain.Administrator">
+		UPDATE ADMINISTRATOR
+		<set>
+			<if test="administratorNo != null">
+				ADMINISTRATOR_NO = #{administratorNo},
+			</if>
+			<if test="subjectNo > 0">
+				SUBJECT_NO = #{subjectNo},
+			</if>
+			<if test="administratorName != null">
+				ADMINISTRATOR_NAME = #{administratorName},
+			</if>
+			<if test="password != null">
+				PASSWORD = #{password},
+			</if>
+		</set>
+		<where>
+			<if test="administratorNo != null and administratorNo != ''">
+				AND ADMINISTRATOR_NO = #{administratorNo}
+			</if>
+		</where>
+	</update>
+
+	<!-- ���� ���� ���� -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM ADMINISTRATOR
+		<where>
+			<if test="administratorNo != null and administratorNo != ''">
+				AND ADMINISTRATOR_NO = #{administratorNo}
+			</if>
+		</where>
+	</delete>
+</mapper>

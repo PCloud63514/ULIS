@@ -1,0 +1,10 @@
+package org.ulis.service;
+
+import org.ulis.domain.Administrator;
+import org.ulis.domain.Student;
+
+public interface LoginService {
+	public Student studentView(String studentNo, String password);
+	public Administrator administratorView(String administratorNo , String password);
+	public void logout();
+}

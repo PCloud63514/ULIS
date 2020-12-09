@@ -1,0 +1,11 @@
+package org.ulis.service;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.ulis.domain.Student;
+
+public interface LoginService {
+	public Boolean login(Student student);
+	public Boolean logout(HttpServletRequest request);
+
+}

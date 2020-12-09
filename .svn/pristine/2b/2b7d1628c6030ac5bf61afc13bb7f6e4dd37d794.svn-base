@@ -1,0 +1,10 @@
+package org.ulis.persistence;
+
+import org.ulis.domain.Administrator;
+
+/**
+ * @author https://www.facebook.com/groups/mybatis/
+ */
+public interface AdministratorMapper {
+    public Administrator select(Administrator administrator) ;
+}

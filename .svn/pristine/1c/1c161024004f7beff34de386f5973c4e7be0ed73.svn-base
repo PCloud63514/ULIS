@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ULIST LOGIN PAGE</title>
+</head>
+<body>
+	<div align="center">
+		<form action="/login/login" method="post">
+			<h2>ULIS Login Page</h2>
+			<table>
+				<tr>
+					<td>로그인</td>
+					<td><input type="text" name="userNo" /></td>
+				</tr>
+				<tr>
+					<td>PW</td>
+					<td><input type="password" name="password" /></td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="login" /></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+</html>

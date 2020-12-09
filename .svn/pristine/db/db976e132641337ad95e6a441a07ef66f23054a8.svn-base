@@ -1,0 +1,223 @@
+package org.ulis.service;
+
+import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.ulis.domain.NoticeBoard;
+import org.ulis.domain.NoticeBoardFile;
+import org.ulis.persistence.NoticeBoardFileMapper;
+import org.ulis.persistence.NoticeBoardMapper;
+
+@Service
+public class NoticeServiceImpl implements NoticeService {
+
+	@Value("#{database['upload.path']}")
+	private String path;
+
+	@Resource
+	private NoticeBoardMapper noticeBoardMapper;
+
+	@Resource
+	private NoticeBoardFileMapper noticeBoardFileMapper;
+
+	@Override
+	public List<NoticeBoard> find(NoticeBoard noticeBoard) {
+		noticeBoard.setItemStart(0);
+		noticeBoard.setItemSizePerPage(50);
+
+		List<NoticeBoard> noticeBoardSetGrade = this.noticeBoardMapper.list(noticeBoard);
+
+		// 값 세팅하는 곳
+		for (int size = 0; size < noticeBoardSetGrade.size(); size++) {
+			getGrade(noticeBoardSetGrade.get(size));
+			setDateType(noticeBoardSetGrade.get(size));
+		}
+		return noticeBoardSetGrade;
+	}
+
+	// 페이징처리
+	@Override
+	public int count(NoticeBoard noticeBoard) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void setDateType(NoticeBoard noticeBoard) {
+		String[] writeDate = noticeBoard.getWriteDate().split(" ");
+		noticeBoard.setWriteDate(writeDate[0]);
+
+		String[] endDate = noticeBoard.getEndDate().split(" ");
+		noticeBoard.setEndDate(endDate[0]);
+	}
+
+	private void getGrade(NoticeBoard noticeBoard) {
+		String grade = "";
+
+		if ("Y".equals(noticeBoard.getGradeOne())) {
+			grade += ",1";
+		}
+		if ("Y".equals(noticeBoard.getGradeTwo())) {
+			grade += ",2";
+		}
+		if ("Y".equals(noticeBoard.getGradeThree())) {
+			grade += ",3";
+		}
+		if ("Y".equals(noticeBoard.getGradeFour())) {
+			grade += ",4";
+		}
+		if (grade.length() % 2 == 0 && grade != "") {
+			grade = grade.substring(1, grade.length());
+		}
+
+		noticeBoard.setGrade(grade);
+	}
+
+	@Override
+	public void setGrade(List<String> gradeList, NoticeBoard noticeBoard) {
+		for (int list = 0; list < gradeList.size(); list++) {
+			if ("1".equals(gradeList.get(list))) {
+				noticeBoard.setGradeOne("Y");
+			} else if ("2".equals(gradeList.get(list))) {
+				noticeBoard.setGradeTwo("Y");
+			} else if ("3".equals(gradeList.get(list))) {
+				noticeBoard.setGradeThree("Y");
+			} else if ("4".equals(gradeList.get(list))) {
+				noticeBoard.setGradeFour("Y");
+			}
+		}
+
+		if (!("Y".equals(noticeBoard.getGradeOne()))) {
+			noticeBoard.setGradeOne("N");
+		}
+		if (!("Y".equals(noticeBoard.getGradeTwo()))) {
+			noticeBoard.setGradeTwo("N");
+		}
+		if (!("Y".equals(noticeBoard.getGradeThree()))) {
+			noticeBoard.setGradeThree("N");
+		}
+		if (!("Y".equals(noticeBoard.getGradeFour()))) {
+			noticeBoard.setGradeFour("N");
+		}
+
+	}
+
+	@Override
+	public int addNotice(List<String> gradeList, NoticeBoard noticeBoard) {
+		// 고정값으로 학과랑 담당자 임시 지정해둠
+		noticeBoard.setAdministratorNo("comgong01");
+		noticeBoard.setSubjectNo(1);
+
+		setGrade(gradeList, noticeBoard);
+		this.noticeBoardMapper.insert(noticeBoard);
+
+		return noticeBoard.getNoticeBoardNo();
+	}
+
+	@Override
+	public void addFile(MultipartFile multipartFile, String division, int noticeSEQ) throws Exception {
+		NoticeBoardFile noticeBoardFile = new NoticeBoardFile();
+
+		String filePath = (path + "\\" + LocalDate.now());
+		File f = new File(filePath);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+
+		String physical1 = String.valueOf(System.currentTimeMillis());
+		String physical2 = String.valueOf(System.nanoTime());
+		String physicalKey = physical1 + physical2;
+
+		noticeBoardFile.setLogicfileName(multipartFile.getOriginalFilename());
+		noticeBoardFile.setPhysicsfileName(physicalKey);
+		noticeBoardFile.setDivision(division);
+		noticeBoardFile.setNoticeBoardNo(noticeSEQ);
+		this.noticeBoardFileMapper.insert(noticeBoardFile);
+
+		Path fileSavePath = FileSystems.getDefault().getPath(filePath + File.separator + physicalKey);
+		File target = new File(fileSavePath.toUri());
+		FileCopyUtils.copy(multipartFile.getBytes(), target);
+	}
+
+	public Map<String, String> fileView(NoticeBoardFile noticeBoardFile) {
+		List<NoticeBoardFile> noticeFile = this.noticeBoardFileMapper.select(noticeBoardFile);
+		Map<String, String> fileInfo = new HashMap<String, String>();
+		if (!noticeFile.isEmpty()) {
+			if (noticeFile.get(0).getDivision().equals("I")) {
+				System.out.println();
+				fileInfo.put("image", noticeFile.get(0).getLogicfileName());
+			} else {
+				for (int size = 0; size < noticeFile.size(); size++) {
+					System.out.println(noticeFile.get(size).getLogicfileName());
+					fileInfo.put("file" + (size + 1), noticeFile.get(size).getLogicfileName());
+				}
+			}
+		} else {
+			System.out.println("파일 없져");
+		}
+
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> view(int noticeBoardNo) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+
+		NoticeBoard noticeBoard = this.noticeBoardMapper.select(noticeBoardNo);
+		getGrade(noticeBoard);
+		resultMap.put("noticeboard", noticeBoard);
+
+		NoticeBoardFile noticeBoardFile = new NoticeBoardFile();
+		noticeBoardFile.setDivision("I");
+		noticeBoardFile.setNoticeBoardNo(noticeBoardNo);
+
+		List<NoticeBoardFile> noticeImageFile = this.noticeBoardFileMapper.select(noticeBoardFile);
+		resultMap.put("image", noticeImageFile);
+
+		noticeBoardFile = new NoticeBoardFile();
+		noticeBoardFile.setDivision("D");
+		noticeBoardFile.setNoticeBoardNo(noticeBoardNo);
+
+		List<NoticeBoardFile> noticeDocumentFile = this.noticeBoardFileMapper.select(noticeBoardFile);
+		resultMap.put("document", noticeDocumentFile);
+
+		return resultMap;
+	}
+
+	@Override
+	public void remove(int noticeBoardNo) {
+		NoticeBoardFile noticeBoardFile = new NoticeBoardFile();
+		NoticeBoard noticeBoard = new NoticeBoard();
+		noticeBoardFile.setNoticeBoardNo(noticeBoardNo);
+		noticeBoard.setNoticeBoardNo(noticeBoardNo);
+
+		List<NoticeBoardFile> noticeBoardFileList = this.noticeBoardFileMapper.select(noticeBoardFile);
+		if (!noticeBoardFileList.isEmpty()) {
+			String setLocalFilePath = (this.path + File.separator);
+			for (int size = 0; size < noticeBoardFileList.size(); size++) {
+				String setDBFilePath = noticeBoardFileList.get(size).getFilePath().substring(0, 10);
+				File noticeFile = new File(setLocalFilePath + setDBFilePath + File.separator
+						+ noticeBoardFileList.get(size).getPhysicsfileName());
+				noticeFile.delete();
+			}
+			this.noticeBoardFileMapper.delete(noticeBoardFile);
+		}
+		this.noticeBoardMapper.delete(noticeBoard);
+	}
+
+	@Override
+	public void alarm(int grade) {
+		// 알람
+	}
+
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- @author https://www.facebook.com/groups/mybatis/ -->
+<mapper namespace="org.mybatis.mapper.IntegrationMessageMapper">
+    <resultMap id="integrationMessageResultMap" type="org.ulis.domain.IntegrationMessage">
+        <id column="INTEGRATION_MESSAGE_NO" property="integrationMessageNo" />
+        <result column="TITLE" property="title" />
+    </resultMap>
+
+    <sql id="whereSql">
+        <where>
+            <if test="integrationMessageNo > 0">
+                AND INTEGRATION_MESSAGE_NO = #{integrationMessageNo}
+            </if>
+            <if test="title != null and title != ''">
+                AND TITLE = #{title}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="org.ulis.domain.IntegrationMessage" resultType="int">
+        SELECT COUNT(*) 
+        FROM INTEGRATION_MESSAGE
+        <include refid="whereSql" />
+    </select>
+
+    <select id="list" parameterType="org.ulis.domain.IntegrationMessage" resultMap="integrationMessageResultMap">
+        SELECT * 
+        FROM (
+            SELECT ROW_NUMBER() OVER(ORDER BY INTEGRATION_MESSAGE_NO) RN
+                  ,INTEGRATION_MESSAGE_NO
+                  ,TITLE
+            FROM INTEGRATION_MESSAGE
+            <include refid="whereSql" />
+        ) TB
+        <where>
+            <if test="itemStart > -1">
+                RN BETWEEN (#{itemStart} + 1) 
+                       AND (#{itemStart} + #{itemSizePerPage})
+            </if>
+        </where>
+    </select>
+
+    <select id="select" parameterType="org.ulis.domain.IntegrationMessage" resultMap="integrationMessageResultMap">
+        SELECT 
+            INTEGRATION_MESSAGE_NO,
+            TITLE
+        FROM INTEGRATION_MESSAGE
+        <include refid="whereSql" />
+    </select>
+
+    <insert id="insert" parameterType="org.ulis.domain.IntegrationMessage">
+        <selectKey keyColumn="INTEGRATION_MESSAGE_NO" keyProperty="integrationMessageNo" resultType="int" order="BEFORE" >
+            SELECT INTEGRATION_MESSAGE_NO_SEQ.NEXTVAL
+            FROM DUAL
+        </selectKey>
+        INSERT INTO INTEGRATION_MESSAGE (
+            INTEGRATION_MESSAGE_NO,
+            TITLE
+        )
+        VALUES (
+            #{integrationMessageNo},
+            #{title}
+        )
+    </insert>
+
+    <update id="update" parameterType="org.ulis.domain.IntegrationMessage">
+        UPDATE INTEGRATION_MESSAGE
+        <set>
+            <if test="integrationMessageNo > 0">
+                INTEGRATION_MESSAGE_NO = #{integrationMessageNo},
+            </if>
+            <if test="title != null">
+                TITLE = #{title},
+            </if>
+        </set>
+        <where>
+            <if test="integrationMessageNo > 0">
+                AND INTEGRATION_MESSAGE_NO = #{integrationMessageNo}
+            </if>
+        </where> 
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM INTEGRATION_MESSAGE 
+        <where>
+            <if test="integrationMessageNo > 0">
+                AND INTEGRATION_MESSAGE_NO = #{integrationMessageNo}
+            </if>
+        </where> 
+    </delete>
+</mapper>

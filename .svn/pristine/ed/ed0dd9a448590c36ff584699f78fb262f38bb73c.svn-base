@@ -1,0 +1,10 @@
+package org.ulis.persistence;
+
+import java.io.IOException;
+
+import org.ulis.domain.Administrator;
+
+
+public interface AdministratorMapper {
+    public Administrator select(Administrator administrator)  ;
+}

@@ -1,0 +1,11 @@
+package org.ulis.service;
+
+import java.util.List;
+
+import org.ulis.domain.NoticeBoard;
+
+public interface NoticeService {
+	public List<NoticeBoard> find(NoticeBoard noticeBoard);
+	
+	public int count(NoticeBoard noticeBoard);
+}

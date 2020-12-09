@@ -1,0 +1,63 @@
+package org.ulis.domain;
+
+import java.io.Serializable;
+
+public class Student implements Serializable{
+	private String studentNo;
+	private String subjectNo;
+	private int grade;
+	private String studentName;
+	private String password;
+	private String fcmToken;
+	
+	public Student() {
+		
+	}
+	
+	public Student(String studentNo, String subjectNo, int grade, String studentName, String password,
+			String fcmToken) {
+		this.studentNo = studentNo;
+		this.subjectNo = subjectNo;
+		this.grade = grade;
+		this.studentName = studentName;
+		this.password = password;
+		this.fcmToken = fcmToken;
+	}
+	
+	public String getStudentNo() {
+		return studentNo;
+	}
+	public void setStudentNo(String studentNo) {
+		this.studentNo = studentNo;
+	}
+	public String getSubjectNo() {
+		return subjectNo;
+	}
+	public void setSubjectNo(String subjectNo) {
+		this.subjectNo = subjectNo;
+	}
+	public int getGrade() {
+		return grade;
+	}
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+	public String getStudentName() {
+		return studentName;
+	}
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getFcmToken() {
+		return fcmToken;
+	}
+	public void setFcmToken(String fcmToken) {
+		this.fcmToken = fcmToken;
+	}
+}

@@ -1,0 +1,31 @@
+package org.ulis.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.ulis.domain.NoticeBoard;
+import org.ulis.persistence.NoticeBoardMapper;
+
+@Service
+public class NoticeServiceImpl implements NoticeService {
+	@Resource
+	private NoticeBoardMapper noticeBoardMapper;
+
+	@Override
+	public List<NoticeBoard> find(NoticeBoard noticeBoard) {
+		noticeBoard.setItemStart(0);
+		noticeBoard.setItemSizePerPage(10);
+
+		return this.noticeBoardMapper.list(noticeBoard);
+	}
+
+	//페이징처리
+	@Override
+	public int count(NoticeBoard noticeBoard) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

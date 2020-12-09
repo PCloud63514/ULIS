@@ -1,0 +1,52 @@
+package org.ulis.presentation;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.ulis.domain.Send;
+import org.ulis.service.IntegrationMessageService;
+
+@Controller
+@RequestMapping(value="/integration")
+public class IntegrationMessageController {
+	@Resource
+	IntegrationMessageService integrationMessageService;
+	
+	
+	@RequestMapping(value="/view/{sendNo}", method = RequestMethod.GET)
+	public ModelAndView view(@PathVariable int sendNo, HttpServletRequest request) {
+		System.out.println(sendNo);
+		Map<String,Object> map = integrationMessageService.view(sendNo);
+		System.out.println(map);
+		ModelAndView modelAndView = new ModelAndView("/integration/view");
+		modelAndView.addObject("viewMap",map);
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping(value="/find", method = RequestMethod.GET)
+	public ModelAndView find(HttpServletRequest request) {
+		List<Map<String,Object>>sendList = integrationMessageService.find(request);
+		
+		ModelAndView modelAndView = new ModelAndView("/integration/find");
+		modelAndView.addObject("sendList",sendList);
+		
+		return modelAndView;
+	}
+	@RequestMapping(value="/sned", method = RequestMethod.GET)
+	public ModelAndView send() {
+		return null;
+	}
+	@RequestMapping(value="/send", method = RequestMethod.POST)
+	public ModelAndView sendPost() {
+		return null;
+	}
+}

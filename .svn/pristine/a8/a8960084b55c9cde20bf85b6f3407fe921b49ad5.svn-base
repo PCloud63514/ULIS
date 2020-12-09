@@ -1,0 +1,53 @@
+package org.ulis.domain;
+
+import java.io.Serializable;
+
+public class Administrator implements Serializable{
+	private String administratorNo;
+	private int subjectNo;
+	private String administratorName;
+	private String password;
+	
+	public Administrator() {
+		
+	}
+	
+	public Administrator(String administratorNo, int subjectNo, String administratorName, String password) {
+		this.administratorNo = administratorNo;
+		this.subjectNo = subjectNo;
+		this.administratorName = administratorName;
+		this.password = password;
+	}
+	
+	public String getAdministratorNo() {
+		return administratorNo;
+	}
+	
+	public void setAdministratorNo(String administratorNo) {
+		this.administratorNo = administratorNo;
+	}
+	
+	public int getSubjectNo() {
+		return subjectNo;
+	}
+	
+	public void setSubjectNo(int subjectNo) {
+		this.subjectNo = subjectNo;
+	}
+	
+	public String getAdministratorName() {
+		return administratorName;
+	}
+	
+	public void setAdministratorName(String administratorName) {
+		this.administratorName = administratorName;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+}

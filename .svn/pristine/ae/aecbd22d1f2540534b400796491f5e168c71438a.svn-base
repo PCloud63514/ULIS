@@ -1,0 +1,124 @@
+package org.ulis.domain;
+
+import java.io.Serializable;
+
+/**
+ * @author https://www.facebook.com/groups/mybatis/
+ */
+public class NoticeBoard implements Serializable {
+    
+	private int noticeBoardNo;
+    private int subjectNo;
+    private int grade;
+    private String title;
+    private String content;
+    private String writeDate;
+    private String endDate;
+    private String administratorNo;
+
+    private int itemStart;
+    private int itemSizePerPage;
+
+    public NoticeBoard() {
+    }
+    
+
+	public NoticeBoard(int noticeBoardNo, int subjectNo, int grade, String title, String content, String writeDate,
+			String endDate, String administratorNo, int itemStart, int itemSizePerPage) {
+		super();
+		this.noticeBoardNo = noticeBoardNo;
+		this.subjectNo = subjectNo;
+		this.grade = grade;
+		this.title = title;
+		this.content = content;
+		this.writeDate = writeDate;
+		this.endDate = endDate;
+		this.administratorNo = administratorNo;
+		this.itemStart = itemStart;
+		this.itemSizePerPage = itemSizePerPage;
+	}
+
+
+
+	public int getNoticeBoardNo() {
+		return noticeBoardNo;
+	}
+
+	public void setNoticeBoardNo(int noticeBoardNo) {
+		this.noticeBoardNo = noticeBoardNo;
+	}
+
+	public int getSubjectNo() {
+		return subjectNo;
+	}
+
+	public void setSubjectNo(int subjectNo) {
+		this.subjectNo = subjectNo;
+	}
+
+	public int getGrade() {
+		return grade;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getWriteDate() {
+		return writeDate;
+	}
+
+	public void setWriteDate(String writeDate) {
+		this.writeDate = writeDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getAdministratorNo() {
+		return administratorNo;
+	}
+
+	public void setAdministratorNo(String administratorNo) {
+		this.administratorNo = administratorNo;
+	}
+
+	public int getItemStart() {
+		return itemStart;
+	}
+
+	public void setItemStart(int itemStart) {
+		this.itemStart = itemStart;
+	}
+
+	public int getItemSizePerPage() {
+		return itemSizePerPage;
+	}
+
+	public void setItemSizePerPage(int itemSizePerPage) {
+		this.itemSizePerPage = itemSizePerPage;
+	}
+    
+    
+}

@@ -1,0 +1,166 @@
+package org.ulis.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.fcm.service.FCMService;
+import org.fcm.service.FCMServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.ulis.domain.IntegrationMessage;
+import org.ulis.domain.Send;
+import org.ulis.domain.Student;
+import org.ulis.persistence.IntegrationMessageMapper;
+import org.ulis.persistence.SendMapper;
+import org.ulis.persistence.StudentMapper;
+
+@Service
+public class IntegrationMessageServiceImpl implements IntegrationMessageService {
+	@Resource
+	IntegrationMessageMapper integrationMessageMapper;
+	@Resource
+	SendMapper sendMapper;
+
+	@Resource
+	StudentMapper studentMapper;
+
+	// TODO integration 인설트
+	private int integrationInsert(IntegrationMessage integrationMessage) {
+		integrationMessageMapper.insert(integrationMessage);
+		int integrationMessageNo = integrationMessage.getIntegrationMessageNo();
+		return integrationMessageNo;
+	}
+
+	// TODO 학생 fcm 가져오기
+	private List<Student> getFCM(Set set) {
+		List<Student> studentList = new ArrayList<Student>();
+		Iterator iterator = set.iterator();
+		while (iterator.hasNext()) {
+			String no = (String) iterator.next();
+			
+			if ("".equals(no) == false) {
+				Student student = new Student();
+				student.setStudentNo(no);
+				student = studentMapper.selectFCM(student);
+				String token = student.getFcmToken();
+				if (token != null || "".equals(token)) {
+					studentList.add(student);
+				}
+			}
+		}
+		return studentList;
+	}
+
+	// TODO send 인설트 and fcm 쏘고
+
+	@Override
+	public void send(String students, IntegrationMessage integrationMessage) {
+		ServletRequestAttributes servletRequestAttribute = (ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes();
+		HttpServletRequest request = servletRequestAttribute.getRequest();
+		HttpSession session = request.getSession();
+		String userNo = (String) session.getAttribute("id");
+		int integrationMessageNo = integrationInsert(integrationMessage);
+		Set set = setStudents(students);
+		List<Student> studentList = getFCM(set);
+
+		FCMService fcmService = new FCMServiceImpl();
+		
+		Send send = new Send();
+		send.setIntegrationMessageNo(integrationMessageNo);
+		send.setAdministratorNo(userNo);
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("type", "integration");
+		for (Student student : studentList) {
+			send.setStudentNo(student.getStudentNo());
+			try {
+				String resultMsg = fcmService.push(student.getFcmToken(), integrationMessage.getTitle(),
+						integrationMessage.getContent(),map);
+				int successIndex = resultMsg.indexOf("success") + 9;
+				int endIndex = resultMsg.indexOf(",", successIndex);
+				int resultNum = Integer.parseInt(resultMsg.substring(successIndex, endIndex));
+
+				if (resultNum == 1) {
+					send.setSendStatus("Y");
+				} else {
+					send.setSendStatus("N");
+				}
+				sendMapper.insert(send);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public Map<String, Object> view(int sendNo) {
+		Send send = new Send();
+		send.setSendNo(sendNo);
+		return sendMapper.selectOne(send);
+	}
+
+	/**
+	 * 통합메시지 목록 조회 관리자는 자신이 발신한 통합 메시지 목록을 조회 학생은 자신이 수신받은 통합 메시지 목록 조회
+	 * 
+	 * 관리자는 메시지 번호 학년 이름 제목 보낸 날짜 필요 학생은 발신인 이름,메시지 제목,내용 수신 날짜 필요
+	 */
+	@Override
+	public List<Map<String, Object>> find() {
+		ServletRequestAttributes servletRequestAttribute = (ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes();
+		HttpServletRequest request = servletRequestAttribute.getRequest();
+		HttpSession session = request.getSession(false);
+
+		List<Map<String, Object>> sendList = null;
+		String id = session.getAttribute("id") != null ? (String) session.getAttribute("id") : "";
+		String roleType = (String)session.getAttribute("roleType");
+		Send send = new Send();
+		if("A".equals(roleType)) {
+			send.setAdministratorNo(id);
+		} else {
+			send.setStudentNo(id);
+		}
+		sendList = sendMapper.selectList(send);
+		return sendList;
+	}
+
+	@Override
+	public List<Student> searchGrade(int gradeNo, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		int subjectNo = (int) session.getAttribute("subjectNo");
+		Student student = new Student();
+		student.setGrade(gradeNo);
+		student.setSubjectNo(subjectNo);
+		return this.studentMapper.searchGrade(student);
+	}
+
+	@Override
+	public boolean checkNull(IntegrationMessage integrationMessage, String students) {
+
+		if (integrationMessage.getContent() == null || integrationMessage.getContent().trim().equals("")
+				|| integrationMessage.getTitle() == null || integrationMessage.getTitle().trim().equals("")
+				|| students == null || students.trim().equals("")) {
+			return false;
+		}
+		return true;
+	}
+
+	private Set setStudents(String students) {
+		String[] studentsArrays = students.split(",");
+		Set studentSet = new HashSet();
+		for (int i = 0; i < studentsArrays.length; i++) {
+			studentSet.add(studentsArrays[i]);
+		}
+		return studentSet;
+	}
+}

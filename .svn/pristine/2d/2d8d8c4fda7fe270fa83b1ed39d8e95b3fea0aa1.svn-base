@@ -1,0 +1,76 @@
+package org.ulis.service;
+
+import java.io.File;
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.ulis.domain.NoticeBoard;
+import org.ulis.domain.NoticeBoardFile;
+import org.ulis.persistence.NoticeBoardFileMapper;
+import org.ulis.persistence.NoticeBoardMapper;
+
+@Service
+public class NoticeServiceImpl implements NoticeService {
+	
+	@Value("#{database['upload.path']}")
+	private String path;
+	
+	@Resource
+	private NoticeBoardMapper noticeBoardMapper;
+
+	@Resource
+	private NoticeBoardFileMapper noticeBoardFileMapper; 
+	
+	@Override
+	public List<NoticeBoard> find(NoticeBoard noticeBoard) {
+		noticeBoard.setItemStart(0);
+		noticeBoard.setItemSizePerPage(10);
+		return this.noticeBoardMapper.list(noticeBoard);
+	}
+
+	//페이징처리
+	@Override
+	public int count(NoticeBoard noticeBoard) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int addNotice(NoticeBoard noticeBoard) {
+		//고정값으로 학과랑 담당자 임시 지정해둠 
+		noticeBoard.setSubjectNo(1);
+		noticeBoard.setAdministratorNo("comgong01");
+		
+	    this.noticeBoardMapper.insert(noticeBoard);
+	    return noticeBoard.getNoticeBoardNo();
+	}
+
+	@Override
+	public void addFile(MultipartFile multipartFile, String division,int noticeSEQ) {
+		NoticeBoardFile noticeBoardFile = new NoticeBoardFile();
+		
+		String filePath = (path+"\\"+LocalDate.now());
+		//폴더 동적생성
+		File f = new File(filePath);
+		if(!f.exists()) {
+			f.mkdirs();			
+		}
+		
+		String physical1 = String.valueOf(System.currentTimeMillis());
+		String physical2 = String.valueOf(System.nanoTime());
+		
+		noticeBoardFile.setLogicfileName(multipartFile.getOriginalFilename());
+		noticeBoardFile.setPhysicsfileName(physical1+physical2);
+		noticeBoardFile.setDivision(division);
+		noticeBoardFile.setNoticeBoardNo(noticeSEQ);
+		this.noticeBoardFileMapper.insert(noticeBoardFile);
+		
+		System.out.println("hihi");
+	}
+
+}

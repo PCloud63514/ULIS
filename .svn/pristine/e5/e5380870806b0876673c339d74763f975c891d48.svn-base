@@ -1,0 +1,48 @@
+package org.ulis.presentation;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.ulis.domain.IntegrationMessage;
+import org.ulis.service.IntegrationMessageService;
+
+@Controller
+@RequestMapping(value="/integration")
+public class IntegrationMessageController {
+	@Resource
+	IntegrationMessageService integrationMessageService;
+	
+	@RequestMapping(value="/view", method = RequestMethod.GET)
+	public ModelAndView view(IntegrationMessage integrationMessage) {
+		System.out.println(integrationMessage.getIntegrationMessageNo());
+		integrationMessage = integrationMessageService.view(integrationMessage);
+		
+		ModelAndView modelAndView = new ModelAndView("/integration/view");
+		modelAndView.addObject("integrationMessage",integrationMessage);
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping(value="/find", method = RequestMethod.GET)
+	public ModelAndView find() {
+		List<IntegrationMessage> integrationMessageList = integrationMessageService.find();
+		
+		ModelAndView modelAndView = new ModelAndView("integration/find");
+		modelAndView.addObject("integrationMessageList",integrationMessageList);
+		
+		return modelAndView;
+	}
+	@RequestMapping(value="/sned", method = RequestMethod.GET)
+	public ModelAndView send() {
+		return null;
+	}
+	@RequestMapping(value="/send", method = RequestMethod.POST)
+	public ModelAndView sendPost() {
+		return null;
+	}
+}

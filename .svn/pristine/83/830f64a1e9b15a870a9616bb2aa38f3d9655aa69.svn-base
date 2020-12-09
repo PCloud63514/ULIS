@@ -1,0 +1,94 @@
+package org.ulis.domain;
+
+import java.io.Serializable;
+
+public class NoticeBoardFile implements Serializable {
+	private int noticeBoardFileNo;
+	private String division;
+	private String logicfileName;
+	private String physicsfileName;
+	private String filePath;
+	private int noticeBoardNo;
+
+	private int itemStart;
+	private int itemSizePerPage;
+
+	public NoticeBoardFile() {
+	}
+
+	public NoticeBoardFile(int noticeBoardFileNo, String division, String logicfileName, String physicsfileName,
+			String filePath, int noticeBoardNo, int itemStart, int itemSizePerPage) {
+		this.noticeBoardFileNo = noticeBoardFileNo;
+		this.division = division;
+		this.logicfileName = logicfileName;
+		this.physicsfileName = physicsfileName;
+		this.filePath = filePath;
+		this.noticeBoardNo = noticeBoardNo;
+		this.itemStart = itemStart;
+		this.itemSizePerPage = itemSizePerPage;
+	}
+
+	public void setNoticeBoardFileNo(int noticeBoardFileNo) {
+		this.noticeBoardFileNo = noticeBoardFileNo;
+	}
+
+	public int getNoticeBoardFileNo() {
+		return this.noticeBoardFileNo;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	public String getDivision() {
+		return this.division;
+	}
+
+	public void setLogicfileName(String logicfileName) {
+		this.logicfileName = logicfileName;
+	}
+
+	public String getLogicfileName() {
+		return this.logicfileName;
+	}
+
+	public void setPhysicsfileName(String physicsfileName) {
+		this.physicsfileName = physicsfileName;
+	}
+
+	public String getPhysicsfileName() {
+		return this.physicsfileName;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getFilePath() {
+		return this.filePath;
+	}
+
+	public void setNoticeBoardNo(int noticeBoardNo) {
+		this.noticeBoardNo = noticeBoardNo;
+	}
+
+	public int getNoticeBoardNo() {
+		return this.noticeBoardNo;
+	}
+
+	public void setItemStart(int itemStart) {
+		this.itemStart = itemStart;
+	}
+
+	public int getItemStart() {
+		return this.itemStart;
+	}
+
+	public void setItemSizePerPage(int itemSizePerPage) {
+		this.itemSizePerPage = itemSizePerPage;
+	}
+
+	public int getItemSizePerPage() {
+		return this.itemSizePerPage;
+	}
+}

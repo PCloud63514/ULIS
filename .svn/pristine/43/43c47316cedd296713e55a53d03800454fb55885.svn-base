@@ -1,0 +1,52 @@
+package org.ulis.presentation;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+@RequestMapping(value = "/login")
+public class LoginController {
+//	@Resource
+//	LoginService loginService;
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public ModelAndView loginGet() {
+		// TODO 로그인 화면을 보여준다.
+		return new ModelAndView("/login/login");
+	}
+//
+//	@RequestMapping(value="/login", method=RequestMethod.POST)
+//	public String loginPost(HttpServletRequest request, @RequestHeader(value="User-Agent")String userAgent) {
+//		HttpSession session = request.getSession(false);
+//		System.out.println(userAgent);
+//		// TODO 세션 확인
+//		if(session == null) {
+//			String id = request.getParameter("id");
+//			String pw = request.getParameter("pw");
+//			// TODO '안드로이드'일 경우
+//			if(userAgent.indexOf("Android") > -1) {
+//				Student student = (Student)loginService.login("Android", id, pw);
+//				System.out.println(student);
+//				// TODO - 학생 조회	
+//			} else if(userAgent.indexOf("Windows") > -1) {
+//				// TODO '브라우저'일 경우
+//				// TODO - 관리자 조회
+//				Administrator administrator = (Administrator)loginService.login("Windows", id, pw);
+//				System.out.println(administrator);
+//				
+//			} else {
+//				//에러 페이지 반환.
+//			}
+//			
+//			// TODO ID/학과/접속 정보를 저장한 세션 생성
+//			// TODO 접속 정보에 맞춰서 결과를 반환.
+//			
+//		} else {
+//			// 이미 세션이 존재한다.
+//			// TODO 접속 정보에 맞춰서 결과 반환.
+//		}
+//		return "/login/login";
+//	}
+}

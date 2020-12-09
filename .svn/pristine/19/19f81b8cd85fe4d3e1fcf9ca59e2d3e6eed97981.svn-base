@@ -1,0 +1,20 @@
+package org.ulis.service;
+
+
+public class LoginServiceImpl implements LoginService{
+
+	@Override
+	public void studentView(String studentNo, String password) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void administratorView(String administratorNo, String password) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void logout() {
+		// TODO Auto-generated method stub
+	}
+}

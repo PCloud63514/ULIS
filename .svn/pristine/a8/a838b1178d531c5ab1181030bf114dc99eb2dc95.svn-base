@@ -1,0 +1,17 @@
+package org.ulis.persistence;
+
+import java.util.List;
+
+import org.ulis.domain.NoticeBoardFile;
+
+/**
+ * @author https://www.facebook.com/groups/mybatis/
+ */
+public interface NoticeBoardFileMapper {
+    public List<NoticeBoardFile> list(NoticeBoardFile noticeBoardFile);
+    public List<NoticeBoardFile> select(NoticeBoardFile noticeBoardFile);
+    public void insert(NoticeBoardFile noticeBoardFile);
+    public void update(NoticeBoardFile noticeBoardFile);
+    public void delete(NoticeBoardFile noticeBoardFile);
+    public NoticeBoardFile download(NoticeBoardFile noticeBoard);
+}

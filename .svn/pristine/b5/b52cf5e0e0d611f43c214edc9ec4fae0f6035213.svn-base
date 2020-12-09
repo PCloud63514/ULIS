@@ -1,0 +1,7 @@
+/*  @font-face {font-family: NanumGothic, 'NanumGothic','NanumGothicBold','Mentone-SemiBold';src:  url('/font/mentone-semibold/webfonts/eof/NanumGothic.eot') format('truetype'),url('/font/mentone-semibold/webfonts/eof/NanumGothicBold.eot') format('truetype'),url('/font/mentone-semibold/webfonts/eof/NanumGothicExtraBold.eot') format('truetype'),url('/font/mentone-semibold/webfonts/eot/style_170995.eot?#iefix') format('embedded-opentype'),url('/font/mentone-semibold/webfonts/woff/style_170995.woff') format('woff'),url('/font/mentone-semibold/webfonts/ttf/style_170995.ttf') format('truetype'),url('/font/mentone-semibold/webfonts/svg/style_170995.svg#Mentone-SemiBold') format('svg');} */
+/*  @font-face {font-family: 'Mentone-SemiBold';src: url('webfonts/eot/style_170995.eot?#iefix') format('embedded-opentype'),url('webfonts/woff/style_170995.woff') format('woff'),url('webfonts/ttf/style_170995.ttf') format('truetype'),url('webfonts/svg/style_170995.svg#Mentone-SemiBold') format('svg');} */
+
+
+@font-face { font-family:'NanumGothicWeb'; font-style:normal; font-weight:400; src: url('/sample/font/NanumGothicCompact.woff') format('woff');}
+@font-face { font-family:'NanumGothicBoldWeb'; font-style:normal; font-weight:700; src: url('/sample/font/NanumGothicBoldCompact.woff') format('woff');}
+@font-face { font-family:'NanumGothicExtraBoldWeb'; font-style:normal; font-weight:800; src: url('/sample/font/NanumGothicExtraBoldCompact.woff') format('woff');}

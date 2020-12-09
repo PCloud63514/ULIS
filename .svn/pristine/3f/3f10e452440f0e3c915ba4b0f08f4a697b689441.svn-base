@@ -1,0 +1,6 @@
+package org.ulis.service;
+
+public interface LoginService {
+	public Object login(String userAgent,String id, String password);
+	public void logout();
+}

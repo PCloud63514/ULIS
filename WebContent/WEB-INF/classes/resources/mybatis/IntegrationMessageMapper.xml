@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.ulis.persistence.IntegrationMessageMapper">
+    <resultMap id="integrationMessageResultMap" type="org.ulis.domain.IntegrationMessage">
+        <id column="INTEGRATION_MESSAGE_NO" property="integrationMessageNo" />
+        <result column="TITLE" property="title" />
+        <result column="CONTENT" property="content" />
+    </resultMap>
+
+    <sql id="whereSql">
+        <where>
+            <if test="integrationMessageNo > 0">
+                AND INTEGRATION_MESSAGE_NO = #{integrationMessageNo}
+            </if>
+            <if test="title != null and title != ''">
+                AND TITLE = #{title}
+            </if>
+            <if test="content != null and content != ''">
+                AND CONTENT = #{content}
+            </if>
+        </where>
+    </sql>
+   
+    <insert id="insert" parameterType="org.ulis.domain.IntegrationMessage">
+        <selectKey keyColumn="INTEGRATION_MESSAGE_NO" keyProperty="integrationMessageNo" resultType="int" order="BEFORE" >
+            SELECT INTEGRATION_MESSAGE_NO_SEQ.NEXTVAL
+            FROM DUAL
+        </selectKey>
+        INSERT INTO INTEGRATION_MESSAGE (
+            INTEGRATION_MESSAGE_NO,
+            TITLE,
+            CONTENT
+        )
+        VALUES (
+            #{integrationMessageNo},
+            #{title},
+            #{content}
+        )
+    </insert>
+ 
+</mapper>

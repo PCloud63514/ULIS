@@ -1,0 +1,44 @@
+package org.ulis.service;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.ulis.domain.Administrator;
+import org.ulis.domain.Student;
+import org.ulis.persistence.AdministratorMapper;
+import org.ulis.persistence.StudentMapper;
+
+@Service
+public class LoginServiceImpl implements LoginService{
+    @Resource
+    private StudentMapper studentMapper;
+    
+    @Resource
+    private AdministratorMapper administratorMapper;
+    
+    @Override
+    public Object login(String userAgent,String id, String password) {
+        if(userAgent.indexOf("Android") > -1) {
+            Student student = new Student();
+            student.setStudentNo(id);
+            student.setPassword(password);
+            
+            student = this.studentMapper.select(student);
+            return student;
+            
+        } else if(userAgent.indexOf("Windows") > -1) {
+            Administrator administrator = new Administrator();
+            administrator.setAdministratorNo(id);
+            administrator.setPassword(password);
+            
+            administrator = this.administratorMapper.select(administrator);
+            return administrator;
+        }
+        return null;
+    }
+
+    @Override
+    public void logout() {
+        // TODO Auto-generated method stub
+    }
+}

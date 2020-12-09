@@ -1,0 +1,53 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+				    <nav>
+				        <div id="navcontainer" class="clearfix">
+                            <div id="user" class="clearfix">
+	                            <c:if test="${not empty id}">
+							        <form id="form_login" action="<%= request.getContextPath() %>/login/logout" method="get" theme="simple">
+                                        <img src="/demo/avatar.png" alt="" />
+		                                <strong class="username"><c:if test="${'S' eq roleType}">학생</c:if><c:if test="${'A' eq roleType}">관리자</c:if> [<c:out value="${id}" />]</strong>
+		                                <ul class="piped">
+		                                    <li><a href="#" id="btn_logout" title="로그아웃">로그아웃</a></li>
+		                                </ul>
+							        </form>
+							    </c:if>
+                            </div>
+				            <div id="navclose"></div>
+                            <ul class="sf-menu">
+	                            <li>
+                                    <a href="#" style="margin-right: 40px;">
+		                                <span class="icon"><img src="/image/menu/pages.png" /></span>
+		                                <span class="title">방제요원</span>
+		                            </a>
+                                    <ul>
+                                        <li><a href="<%= request.getContextPath() %>/agent">방제요원관리</a></li>
+                                    </ul>
+	                            </li>
+                                <li>
+                                    <a href="#" style="margin-right: 40px;">
+                                        <span class="icon"><img src="/image/menu/styles.png" /></span>
+                                        <span class="title">교량정보</span>
+                                    </a>
+                                    <ul>
+                                        <li><a href="">교량정보관리</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" style="margin-right: 40px;">
+                                        <span class="icon"><img src="/image/menu/dashboard.png" /></span>
+                                        <span class="title">기상정보</span>
+                                    </a>
+                                    <ul>
+                                        <li><a href="">기상정보관리</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+				       </div>
+				    </nav>
+
+                    <script type="text/javascript">
+				        $("#btn_logout").on("click", function(e) {
+				        	$('#form_login').submit();
+				        });
+					</script>

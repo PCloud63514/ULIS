@@ -1,0 +1,150 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" 
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NOTICE BOARD EDIT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<script>
+	function addRow(){
+		var count= document.getElementById("insertTable").rows.length;
+		if(count==3){
+			alert("더이상 추가되지 않습니다");
+		return;
+		}
+		
+		var oRow = fileList.insertRow();
+		  oRow.onmouseover=function(){fileList.clickedRowIndex=this.rowIndex};
+		var oCell1 = oRow.insertCell();
+		var oCell2 = oRow.insertCell();
+	}
+</script>
+
+<body>
+    <h3>공지사항 수정</h3>
+<form>
+    <table style="width: 100%;" border="1">
+        <thead>
+            <tr>
+                <th width="10%">구분</th>
+                <th>내용</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>제목</td>
+                <td style="text-align: left;">
+                     <input type="text" name="title" value="${noticeBoard.title}" />
+                </td>
+            </tr>
+            <tr>
+                <td>대상학년</td>
+                <td style="text-align: left;">
+                    <c:if test="${noticeBoard.gradeOne =='Y'}">
+               			<input type="checkbox" name="gradeOne" value=Y checked="checked" />1학년
+               		</c:if>
+               		<c:if test="${noticeBoard.gradeOne =='N'}">
+               			<input type="checkbox" name="gradeOne" value=Y />1학년
+               		</c:if>
+               		
+               		<c:if test="${noticeBoard.gradeTwo =='Y'}">
+               			<input type="checkbox" name="gradeTwo" value=Y checked="checked" />2학년
+               		</c:if>
+               		<c:if test="${noticeBoard.gradeTwo =='N'}">
+               			<input type="checkbox" name="gradeTwo" value=Y />2학년
+               		</c:if>
+               		
+               		<c:if test="${noticeBoard.gradeThree =='Y'}">
+               			<input type="checkbox" name="gradeThree" value=Y checked="checked" />3학년
+               		</c:if>
+               		<c:if test="${noticeBoard.gradeThree =='N'}">
+               			<input type="checkbox" name="gradeThree" value=Y />3학년
+               		</c:if>
+               		
+               		<c:if test="${noticeBoard.gradeFour =='Y'}">
+               			<input type="checkbox" name="gradeFour" value=Y checked="checked" />4학년
+               		</c:if>
+               		<c:if test="${noticeBoard.gradeFour =='N'}">
+               			<input type="checkbox" name="gradeFour" value=Y />4학년
+               		</c:if>
+                </td>
+            </tr>
+            <tr>
+                <td>종료일자</td>
+                <td style="text-align: left;">
+                    <input type="date" name="endDate" value="${noticeBoard.endDate}">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+        
+    <table id="insertTable" border="1" align=center>
+	<tr>
+		<c:if test="${!empty document}">
+                <tr>
+                    <td>파일다운로드</td>
+                    <td style="text-align: left;">
+				        <c:forEach items="${document}" var="noticeBoardFile" 
+				        		varStatus="status" begin="1" step="1">
+						   <input type="button" id="fileName${status.count}"  name="originalFile"
+							        value="${noticeBoardFile.logicfileName}" />
+					       <input type="button" id="deleteFile${status.begin} " name="deleteFile" value="삭제" onclick="ㅇㅅㅇ"/><br>
+				           <input type="button" value="추가" onClick='addFile(this.form)'> 
+						   <input type="button" value="삭제" onClick='deleteFile(this.form)'> 
+				        </c:forEach>
+				    </td>
+			    </tr>
+		</c:if>
+		<c:if test="${empty document}">
+			<tr>
+				<td>파일다운로드</td>
+				<td>
+					<input type="file" id="filename1" name="File" size="70" onchange="sizeCheck('1')"/>
+					<input type="button" value="추가" onClick='addFile(this.form)'> 
+					<input type="button" value="삭제" onClick='deleteFile(this.form)'> 
+				</td>
+			</tr>
+		</c:if>
+	</tr>
+	</table>     
+     <table>   
+            <c:if test="${!empty image}">
+                <tr>
+                    <td>이미지</td>
+			        	<c:forEach items="${image}" var="noticeBoardFile" varStatus="status">
+					        <td style="text-align: center;">
+					            <a href="<c:url value= "download/${noticeBoardFile.physicsfileName}" />">
+							        <input type="button" id="button_view" name="button_view" value="${noticeBoardFile.logicfileName}"/>
+					            </a>
+					        </td>
+				       </c:forEach>
+			    </tr>
+			</c:if>
+            <tr>
+                <td>내용</td>
+                <td style="text-align: left;">
+                    <c:out value="${noticeBoard.content}" />
+                </td>
+            </tr>
+    </table>
+
+    <div style="text-align: right; padding-top: 10px;">
+        <a href="<c:url value="/notice/find" />">
+            <input type="button" id="button_list" name="button_list" value="목록" />
+        </a>
+        <a href="<c:url value="/notice/remove/${noticeBoard.noticeBoardNo}" />">
+            <input type="button" id="button_list" name="button_list" value="삭제" />
+        </a>
+        <a href="<c:url value="/notice/edit/${noticeBoard.noticeBoardNo}" />">
+            <input type="button" id="button_list" name="button_list" value="수정" />
+        </a>
+    </div>
+</form>
+</body>
+
+</html>

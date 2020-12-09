@@ -1,0 +1,19 @@
+package org.ulis.persistence;
+
+import java.util.List;
+import java.util.Map;
+
+import org.ulis.domain.Send;
+
+/**
+ * @author https://www.facebook.com/groups/mybatis/
+ */
+public interface SendMapper {
+    public List<Send> list(Send send);
+    public Send select(Send send);
+    public Map<String,Object> selectOne(int sendNo);
+    public List<Map<String,Object>> selectList(String administratorNo);
+    public void insert(Send send);
+    public void update(Send send);
+    public void delete(Send send);
+}

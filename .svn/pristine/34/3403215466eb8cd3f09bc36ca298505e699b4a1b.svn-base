@@ -1,0 +1,146 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" 
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <%@ include file="/WEB-INF/jsp/layout/header.jsp" %>
+</head>
+
+<body>
+	<div id="wrap">
+		 <div id="main">
+		 	 <header>
+                <div class="container_16 clearfix">
+                    <%@ include file="/WEB-INF/jsp/layout/menu.jsp" %>
+                    <div id="pagetitle" class="clearfix"><h1 class="left">공지사항</h1></div>
+                </div>
+            </header>
+            
+            <div class="container_16 clearfix" id="actualbody">
+                <div class="clear"></div>
+                <div class="grid_16 widget first">
+                	<div class="widget_title clearfix"><h2>공지사항 조회</h2></div>
+                    <div class="widget_body" style="padding-bottom: 20px;">
+                    	  <div id="table3">
+                    	  	<table class="simple">
+                    	  		<thead>
+                                    <tr>
+                                        <th class="center">구분</th>
+                                        <th class="center">내용</th>
+                                    </tr>
+                                </thead>
+                    			<tbody>
+                    				<tr>
+	                                    <td width="15%" style="padding-left: 10px;">
+	                                        <label><strong>제목</strong></label>
+	                                    </td>
+	                                    <td style="text-align: left;"><c:out value="${noticeBoard.title}" /></td>
+                               		</tr>
+                               		<tr>
+	                                    <td width="15%" style="padding-left: 10px;">
+	                                        <label><strong>작성자</strong></label>
+	                                    </td>
+	                                    <td style="text-align: left;"><c:out value="${noticeBoard.administratorNo}" /></td>
+                               		</tr>
+                               		<tr>
+	                                    <td width="15%" style="padding-left: 10px;">
+	                                        <label><strong>대상학년</strong></label>
+	                                    </td>
+	                                    <td style="text-align: left;">
+						                    <% String grade=""; %>
+						                    <c:if test="${noticeBoard.gradeOne =='Y'}">
+						               			<% grade = grade+ "1,"; %>
+						               		</c:if>
+						               		<c:if test="${noticeBoard.gradeTwo =='Y'}">
+						               			<% grade = grade+ "2,"; %>
+						               		</c:if>
+						               		<c:if test="${noticeBoard.gradeThree =='Y'}">
+						               			<% grade = grade+ "3,"; %>
+						               		</c:if>
+						               		<c:if test="${noticeBoard.gradeFour =='Y'}">
+						               			<% grade = grade+ "4,"; %>
+						               		</c:if>
+						               		<% int indexOfComma = grade.lastIndexOf(",");
+						               		
+						               		out.println(grade.substring(0, indexOfComma));
+						               		%>
+						                </td>
+                               		</tr>
+                               		<tr>
+	                                    <td width="15%" style="padding-left: 10px;">
+	                                        <label><strong>작성일자</strong></label>
+	                                    </td>
+	                                    <td style="text-align: left;"><c:out value="${noticeBoard.writeDate}" /></td>
+                               		</tr>
+                               		<tr>
+	                                    <td width="15%" style="padding-left: 10px;">
+	                                        <label><strong>종료일자</strong></label>
+	                                    </td>
+	                                    <td style="text-align: left;"><c:out value="${noticeBoard.endDate}" /></td>
+                               		</tr>
+					            <c:if test="${!empty document}">
+					                <tr>
+					                	<td width="15%" style="padding-left: 10px;">
+	                                        <label><strong>파일다운로드</strong></label>
+	                                    </td>
+					                    <td style="text-align: left;">
+									        <c:forEach items="${document}" var="noticeBoardFile" varStatus="status">
+										        <a href="<c:url value= "/file/download/${noticeBoardFile.physicsfileName}" />">
+												    ${noticeBoardFile.logicfileName}
+										        </a><br>
+									        </c:forEach>
+									    </td>
+								    </tr>
+								</c:if>
+					            <c:if test="${!empty image}">
+					                <tr>
+					                	<td width="15%" style="padding-left: 10px;">
+	                                        <label><strong>이미지</strong></label>
+	                                    </td>
+					                    <td>
+								        	<c:forEach items="${image}" var="noticeBoardFile" varStatus="status">
+										        <img src="<c:url value= "/notice/image/${noticeBoardFile.physicsfileName}" /> " style="max-width: 45%; height: auto;">
+									       </c:forEach>
+									     </td>
+								    </tr>
+								</c:if>
+						            <tr>
+						            	<td width="15%" style="padding-left: 10px;">
+	                                        <label><strong>내용</strong></label>
+	                                    </td>
+						                <td style="text-align: left;">
+						                    <c:out value="${noticeBoard.content}" />
+						                </td>
+						            </tr>
+                    			</tbody>
+                    	  	</table>
+                    	  	<div class="clear"></div>
+                            <div class="center" style="margin-top: 10px;">
+                                <div id="navigator"></div>
+                            </div>
+                            <div class="clear"></div>
+                    	  </div>
+                    </div>
+                    <div style="text-align: right; padding-top: 10px;">
+				        <a href="<c:url value="/notice/find" />">
+				            <input type="button" id="button_list" name="button_list" value="목록" />
+				        </a>
+				        <c:if test="${noticeBoard.administratorNo eq id}">
+					        <a href="<c:url value="/notice/remove/${noticeBoard.noticeBoardNo}" />">
+					            <input type="button" id="button_list" name="button_list" value="삭제" />
+					        </a>
+					        <a href="<c:url value="/notice/edit/${noticeBoard.noticeBoardNo}" />">
+					            <input type="button" id="button_list" name="button_list" value="수정" />
+					        </a>
+				        </c:if>
+				    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+		 </div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+package org.ulis.persistence;
+
+import org.ulis.domain.Subject;
+
+/**
+ * @author https://www.facebook.com/groups/mybatis/
+ */
+public interface SubjectMapper {
+    public Subject select(Subject subject);
+    
+}

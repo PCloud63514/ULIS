@@ -1,0 +1,11 @@
+package org.ulis.service;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.servlet.ModelAndView;
+
+public interface LoginService {
+	public Boolean login(String userAgent, HttpServletRequest request) ;
+	
+	public ModelAndView logout(HttpServletRequest request);
+}

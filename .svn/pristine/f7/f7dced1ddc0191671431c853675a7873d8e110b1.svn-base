@@ -1,0 +1,6 @@
+package org.ulis.service;
+
+public interface LoginService {
+	public void login();
+	public void logout();
+}

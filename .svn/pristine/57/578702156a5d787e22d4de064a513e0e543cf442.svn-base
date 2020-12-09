@@ -1,0 +1,103 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" 
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NOTICE BOARD EDIT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<script>
+	function addRow(){
+		var count= document.getElementById("insertTable").rows.length;
+		if(count==3){
+			alert("더이상 추가되지 않습니다");
+		return;
+		}
+		
+		var oRow = fileList.insertRow();
+		  oRow.onmouseover=function(){fileList.clickedRowIndex=this.rowIndex};
+		var oCell1 = oRow.insertCell();
+		var oCell2 = oRow.insertCell();
+	}
+</script>
+
+<body>
+   	<jsp:include page="/WEB-INF/jsp/menuBar.jsp"></jsp:include>
+    <h3>공지사항 수정</h3>
+<form action="/notice/edit/${noticeBoard.noticeBoardNo}" method="post">
+    <table style="width: 100%;" border="1">
+        <thead>
+            <tr>
+                <th width="10%">구분</th>
+                <th>내용</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>제목</td>
+                <td style="text-align: left;">
+                     <input type="text" name="title" value="${noticeBoard.title}" />
+                </td>
+            </tr>
+            <tr>
+                <td>대상학년</td>
+                <td style="text-align: left;">
+                    <c:if test="${noticeBoard.gradeOne =='Y'}">
+               			<input type="checkbox" name="gradeOne" value=Y checked="checked" />1학년
+               		</c:if>
+               		<c:if test="${noticeBoard.gradeOne =='N'}">
+               			<input type="checkbox" name="gradeOne" value=Y />1학년
+               		</c:if>
+               		
+               		<c:if test="${noticeBoard.gradeTwo =='Y'}">
+               			<input type="checkbox" name="gradeTwo" value=Y checked="checked" />2학년
+               		</c:if>
+               		<c:if test="${noticeBoard.gradeTwo =='N'}">
+               			<input type="checkbox" name="gradeTwo" value=Y />2학년
+               		</c:if>
+               		
+               		<c:if test="${noticeBoard.gradeThree =='Y'}">
+               			<input type="checkbox" name="gradeThree" value=Y checked="checked" />3학년
+               		</c:if>
+               		<c:if test="${noticeBoard.gradeThree =='N'}">
+               			<input type="checkbox" name="gradeThree" value=Y />3학년
+               		</c:if>
+               		
+               		<c:if test="${noticeBoard.gradeFour =='Y'}">
+               			<input type="checkbox" name="gradeFour" value=Y checked="checked" />4학년
+               		</c:if>
+               		<c:if test="${noticeBoard.gradeFour =='N'}">
+               			<input type="checkbox" name="gradeFour" value=Y />4학년
+               		</c:if>
+                </td>
+            </tr>
+            <tr>
+                <td>종료일자</td>
+                <td style="text-align: left;">
+                    <input type="date" name="endDate" value="${noticeBoard.endDate}">
+                </td>
+            </tr>
+            <tr>
+                <td>내용</td>
+                <td style="text-align: left;">
+                    <textarea rows="15" cols="72" name="content">${noticeBoard.content}</textarea>
+                </td>
+            </tr>
+          </tbody>
+    </table>
+
+    <div style="text-align: right; padding-top: 10px;">
+        <a href="<c:url value="/notice/find" />">
+            <input type="button" id="button_list" name="button_list" value="목록" />
+        </a>
+           <input type="submit" id="button_list" name="button_list" value="변경" />
+       
+    </div>
+</form>
+</body>
+
+</html>

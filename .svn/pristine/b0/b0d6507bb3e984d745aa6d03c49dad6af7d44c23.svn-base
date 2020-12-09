@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- @author https://www.facebook.com/groups/mybatis/ -->
+<mapper namespace="org.ulis.mapper.SendMapper">
+    <resultMap id="sendResultMap" type="org.ulis.domain.Send">
+        <id column="SEND_NO" property="sendNo" />
+        <result column="ADMINISTRATOR_NO" property="administratorNo" />
+        <result column="INTEGRATION_MESSAGE_NO" property="integrationMessageNo" />
+        <result column="STUDENT_NO" property="studentNo" />
+        <result column="SEND_DATE" property="sendDate" />
+        <result column="SEND_STATUS" property="sendStatus" />
+    </resultMap>
+
+    <sql id="whereSql">
+        <where>
+            <if test="sendNo > 0">
+                AND SEND_NO = #{sendNo}
+            </if>
+            <if test="administratorNo != null and administratorNo != ''">
+                AND ADMINISTRATOR_NO = #{administratorNo}
+            </if>
+            <if test="integrationMessageNo > 0">
+                AND INTEGRATION_MESSAGE_NO = #{integrationMessageNo}
+            </if>
+            <if test="studentNo != null and studentNo != ''">
+                AND STUDENT_NO = #{studentNo}
+            </if>
+            <if test="sendDate != null and sendDate != ''">
+                AND SEND_DATE = #{sendDate}
+            </if>
+            <if test="sendStatus != null and sendStatus != ''">
+                AND SEND_STATUS = #{sendStatus}
+            </if>
+        </where>
+    </sql>
+
+    <!-- ��ü �Ǽ� ��ȸ ���� ���� -->
+    <select id="count" parameterType="org.ulis.domain.Send" resultType="int">
+        SELECT COUNT(*) 
+        FROM SEND
+        <include refid="whereSql" />
+    </select>
+
+    <!-- ��� ��ȸ ���� ���� -->
+    <select id="list" parameterType="org.ulis.domain.Send" resultMap="sendResultMap">
+        SELECT * 
+        FROM (
+            SELECT ROW_NUMBER() OVER(ORDER BY SEND_NO) RN
+                  ,SEND_NO
+                  ,ADMINISTRATOR_NO
+                  ,INTEGRATION_MESSAGE_NO
+                  ,STUDENT_NO
+                  ,SEND_DATE
+                  ,SEND_STATUS
+            FROM SEND
+            <include refid="whereSql" />
+        ) TB
+        <where>
+            <if test="itemStart > -1">
+                RN BETWEEN (#{itemStart} + 1) 
+                       AND (#{itemStart} + #{itemSizePerPage})
+            </if>
+        </where>
+    </select>
+
+    <!-- ��ȸ ���� ���� -->
+    <select id="select" parameterType="org.ulis.domain.Send" resultMap="sendResultMap">
+        SELECT 
+            SEND_NO,
+            ADMINISTRATOR_NO,
+            INTEGRATION_MESSAGE_NO,
+            STUDENT_NO,
+            SEND_DATE,
+            SEND_STATUS
+        FROM SEND
+        <include refid="whereSql" />
+    </select>
+
+    <!-- ��� ���� ���� -->
+    <insert id="insert" parameterType="org.ulis.domain.Send">
+        <!-- �ڵ� ���� Ű ��ȸ -->
+        <selectKey keyColumn="SEND_NO" keyProperty="sendNo" resultType="int" order="BEFORE" >
+            SELECT SEND_NO_SEQ.NEXTVAL
+            FROM DUAL
+        </selectKey>
+        INSERT INTO SEND (
+            SEND_NO,
+            ADMINISTRATOR_NO,
+            INTEGRATION_MESSAGE_NO,
+            STUDENT_NO,
+            SEND_DATE,
+            SEND_STATUS
+        )
+        VALUES (
+            #{sendNo},
+            #{administratorNo},
+            #{integrationMessageNo},
+            #{studentNo},
+            #{sendDate},
+            #{sendStatus}
+        )
+    </insert>
+
+    <!-- ���� ���� ���� -->
+    <update id="update" parameterType="org.ulis.domain.Send">
+        UPDATE SEND
+        <set>
+            <if test="sendNo > 0">
+                SEND_NO = #{sendNo},
+            </if>
+            <if test="administratorNo != null">
+                ADMINISTRATOR_NO = #{administratorNo},
+            </if>
+            <if test="integrationMessageNo > 0">
+                INTEGRATION_MESSAGE_NO = #{integrationMessageNo},
+            </if>
+            <if test="studentNo != null">
+                STUDENT_NO = #{studentNo},
+            </if>
+            <if test="sendDate != null">
+                SEND_DATE = #{sendDate},
+            </if>
+            <if test="sendStatus != null">
+                SEND_STATUS = #{sendStatus},
+            </if>
+        </set>
+        <where>
+            <if test="sendNo > 0">
+                AND SEND_NO = #{sendNo}
+            </if>
+        </where> 
+    </update>
+
+    <!-- ���� ���� ���� -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM SEND 
+        <where>
+            <if test="sendNo > 0">
+                AND SEND_NO = #{sendNo}
+            </if>
+        </where> 
+    </delete>
+</mapper>

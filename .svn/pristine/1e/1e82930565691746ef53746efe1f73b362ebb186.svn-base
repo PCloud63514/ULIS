@@ -1,0 +1,7 @@
+package org.ulis.service;
+
+public interface LoginService {
+	public void studentView(String studentNo, String password);
+	public void administratorView(String administratorNo , String password);
+	public void logout();
+}
